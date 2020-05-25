@@ -476,7 +476,10 @@ class Connection
     {
         try {
             if (is_callable($this->acquireAccessTokenLockCallback)) {
-                call_user_func($this->acquireAccessTokenLockCallback, $this);
+                if (!call_user_func($this->acquireAccessTokenLockCallback, $this)) {
+                    // The acquire access token lock may return false
+                    return;
+                }
             }
 
             // If refresh token not yet acquired, do token request
